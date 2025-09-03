@@ -4,8 +4,8 @@ const app = express()
 const morgan = require('morgan')
 const Person = require('./models/person')
 
-morgan.token('data', function (req, res) { 
-    return JSON.stringify(req.body)
+morgan.token('data', function (req) {
+  return JSON.stringify(req.body)
 })
 
 app.use(express.static('dist'))
@@ -28,7 +28,7 @@ app.get('/api/persons', (request, response, next) => {
   Person.find({}).then(persons => {
     response.json(persons)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.get('/info', (request, response, next) => {
@@ -36,7 +36,7 @@ app.get('/info', (request, response, next) => {
   Person.find({}).then(persons => {
     response.send(`<p>Phonebook has info for ${persons.length} people</p> ${dateInfo}`)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -53,7 +53,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
@@ -64,14 +64,14 @@ app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
   if (!body.name) {
-    return response.status(400).json({ 
-      error: 'name missing' 
+    return response.status(400).json({
+      error: 'name missing'
     })
   }
 
   if (!body.number) {
-    return response.status(400).json({ 
-      error: 'number missing' 
+    return response.status(400).json({
+      error: 'number missing'
     })
   }
 
@@ -82,8 +82,8 @@ app.post('/api/persons', (request, response, next) => {
 
   person.save().then(savedPerson => {
     response.json(savedPerson)
-  })  
-  .catch(error => next(error))
+  })
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
